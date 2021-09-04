@@ -10,6 +10,7 @@ import com.example.react.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +32,11 @@ public class ProjectController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Project> createNewProject(@Valid @RequestBody Project project){
-    
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
+        
+        if(result.hasErrors()) {
+            return new ResponseEntity<String>("Invalid part of the object", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Project>(service.createNewProject(project), HttpStatus.CREATED);
     }
 }
