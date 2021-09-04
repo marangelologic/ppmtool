@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity
 @Data
 public class Project {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,6 +22,7 @@ public class Project {
     @NotNull(message = "project name cannot be null!")
     private String name;
 
+    @Valid
+    @NotNull(message = "project description cannot be null!")
     private String description;
-
 }

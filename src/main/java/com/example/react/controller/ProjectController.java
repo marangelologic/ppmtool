@@ -1,12 +1,11 @@
 package com.example.react.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import com.example.react.model.Project;
+import com.example.react.service.MapValidationErrorMessageService;
 import com.example.react.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +25,23 @@ public class ProjectController {
     @Autowired
     ProjectService service;
 
+    @Autowired
+    MapValidationErrorMessageService mapValidationErrorMessageService;
+
     @GetMapping
     public List<Project> getAllProjects() {
         return service.getAllProjects();
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
-        
-        if(result.hasErrors()) {
-            Map<String, String> errorMessageMap = new HashMap<>();
-            result.getFieldErrors().forEach(error-> errorMessageMap.put(error.getField(), error.getDefaultMessage()));
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
-            return new ResponseEntity<Map<String,String>>(errorMessageMap, HttpStatus.BAD_REQUEST);
+        ResponseEntity<?> errorMap = mapValidationErrorMessageService.MapValidationErrorMessageService(result);
+
+        if (errorMap != null) {
+            return errorMap;
         }
+
         return new ResponseEntity<Project>(service.createNewProject(project), HttpStatus.CREATED);
     }
 }
