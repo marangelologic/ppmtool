@@ -2,6 +2,7 @@ package com.example.react.service;
 
 import java.util.List;
 
+import com.example.react.exceptions.ProjectExceptionResponse;
 import com.example.react.model.Project;
 import com.example.react.repository.ProjectRepository;
 
@@ -20,7 +21,11 @@ public class ProjectService {
     }
 
     public Project createNewProject(Project project){
-        return repository.save(project);
+        try {
+            return repository.save(project);
+        } catch (Exception e) {
+            throw new ProjectExceptionResponse(e.getMessage() + project.getId());
+        }
     }
 
 }
