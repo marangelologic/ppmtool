@@ -18,10 +18,10 @@ public class ProjectService {
 
 
     public List<Project> getAllProjects() {
-       return repository.findAll();
+        return repository.findAll();
     }
 
-    public Project createNewProject(Project project){
+    public Project createNewProject(Project project) {
         try {
             return repository.save(project);
         } catch (Exception e) {
@@ -29,14 +29,27 @@ public class ProjectService {
         }
     }
 
-    public Project findProjectById(String projectId){
+    public Project findProjectById(String projectId) {
 
-            Long id = Long.parseLong(projectId);
-            Project foundProject = repository.findById(id).orElse(null);
+        Long id = Long.parseLong(projectId);
+        Project foundProject = repository.findById(id).orElse(null);
 
-            if(foundProject == null) {
-                throw new NoDataFoundException("NOT_FOUND_EXCEPTION");
-            }
-            return foundProject;
+        if (foundProject == null) {
+            throw new NoDataFoundException("NOT_FOUND_EXCEPTION");
+        }
+        return foundProject;
     }
+
+    public void deleteProjectById(String projectId) {
+
+        Long id = Long.parseLong(projectId);
+        Project foundProject = repository.findById(id).orElse(null);
+
+        if (foundProject == null) {
+            throw new NoDataFoundException("NOT_FOUND_EXCEPTION " + projectId + " cannot be found!");
+        }
+
+        repository.delete(foundProject);
+    }
+
 }
